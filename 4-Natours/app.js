@@ -82,6 +82,42 @@ const deleteTour = (req, res) => {
   res.status(204).json({ status: 'success', data: null });
 };
 
+//USER HANDLERS
+const getAllUsers = (req, res) => {
+  res.status(504).json({
+    status: 'error',
+    message: 'This route is not defiend yet :)',
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(504).json({
+    status: 'error',
+    message: 'This route is not defiend yet :)',
+  });
+};
+
+const addUser = (req, res) => {
+  res.status(504).json({
+    status: 'error',
+    message: 'This route is not defiend yet :)',
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(504).json({
+    status: 'error',
+    message: 'This route is not defiend yet :)',
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(504).json({
+    status: 'error',
+    message: 'This route is not defiend yet :)',
+  });
+};
+
 //GET
 // app.get('/api/v1/tours', getAllTours);
 
@@ -98,13 +134,33 @@ const deleteTour = (req, res) => {
 // app.delete('/api/v1/tours/:id', deleteTour);
 
 //ROUTE
-app.route('/api/v1/tours').get(getAllTours).post(updateTour);
-app
-  .route('/api/v1/tours/:id')
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+// app.route('/api/v1/tours').get(getAllTours).post(updateTour);
+// app
+//   .route('/api/v1/tours/:id')
+//   .get(getTour)
+//   .patch(updateTour)
+//   .delete(deleteTour);
 
+//USER ROUTES
+// app.route('/api/v1/users').get(getAllTours).post(addUser);
+// app
+//   .route('/api/v1/users/:id')
+//   .get(getUser)
+//   .patch(updateUser)
+//   .delete(deleteUser);
+
+//CREATING ROUTES AS PER RESOURCES
+const tourRouter = express.Router();
+const userRouter = express.Router();
+
+tourRouter.route('/').get(getAllTours).post(updateTour);
+tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+
+userRouter.route('/').get(getAllTours).post(addUser);
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', tourRouter);
 //
 const port = 3000;
 app.listen(3000, () => {
