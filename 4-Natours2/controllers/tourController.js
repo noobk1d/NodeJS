@@ -31,26 +31,26 @@ exports.checkBody = (req, res, next) => {
 };
 
 //ROUTE HANDLERS
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestedTime,
-    result: tours.length,
-    tours,
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tours.find();
+    res.status(200).json({
+      status: 'success',
+      result: tours.length,
+      data: { tours },
+    });
+  } catch (err) {
+    res.status(404).json({ status: 'fail', message: err });
+  }
 };
 
-exports.getTour = (req, res) => {
-  // console.log(typeof req.params.id);
-  // console.log(req.params);
-  const id = req.params.id * 1;
-  const tour = tours.find((el) => el.id === id);
-  // console.log(tour);
-  if (!tour) {
-    res.status(404).json({ status: 'fail', message: 'Invalid Id' });
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tours.findById(req.params.id);
+    res.status(201).json({ status: 'success', data: { tour } });
+  } catch (err) {
+    res.status(404).json({ status: 'fail', message: err });
   }
-  res.status(200).json({ status: 'success', data: { tour } });
-  // res.send(req.params);
 };
 
 exports.createTour = async (req, res) => {
@@ -63,22 +63,25 @@ exports.createTour = async (req, res) => {
   }
 };
 
-exports.updateTour = (req, res) => {
-  const id = req.params.id * 1;
-  const tour = tours.find((el) => el.id === id);
-  console.log(tour);
-  if (!tour) {
-    res.status(404).json({ status: 'fail', message: 'Invalid Id' });
+exports.updateTour = async (req, res) => {
+  try {
+    const tour = await Tours.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(201).json({ status: 'success', data: { tour } });
+  } catch (err) {
+    res.status(404).json({ status: 'fail', message: err });
   }
-  res.status(200).json({ status: 'success', message: 'Tour Updated' });
 };
 
-exports.deleteTour = (req, res) => {
-  const id = req.params.id * 1;
-  const tour = tours.find((el) => el.id === id);
-  console.log(tour);
-  if (!tour) {
-    res.status(404).json({ status: 'fail', message: 'Invalid Id' });
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tours.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({ status: 'success', data: null });
+  } catch (err) {
+    res.status(404).json({ status: 'fail', message: err });
   }
-  res.status(204).json({ status: 'success', data: null });
 };
